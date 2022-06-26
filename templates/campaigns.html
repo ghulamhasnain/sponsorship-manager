@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+
+{% block title %}Campaigns{% endblock %}
+
+{% block content %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mouse0270-bootstrap-notify/3.1.7/bootstrap-notify.min.js"></script>
+
+{% if error %}
+    <div class="row" style="margin: 10px">
+        <div class="alert alert-danger" style="margin-top: 20px">{{error}}</div>
+    </div>
+{% endif %}
+
+<div class="row" style="margin: 10px">
+    <div class="col-xs-1 col-xs-offset-11 btn btn-primary glyphicon glyphicon-plus" data-toggle="modal" data-target="#add"></div>
+</div>
+
+<div class="row">
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th style="text-align: center">No.</th>
+                    <th style="text-align: center">Name</th>
+                    <th style="text-align: center">Subject</th>
+                    <th style="text-align: center">Created</th>
+                    <th style="text-align: center">Modified</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for c in campaigns %}
+                    <tr class="campaigns">
+                        <td>{{forloop.counter}}
+                        <td><a class="campaign" href="#" info="{{c.name}}">{{c.name}}</a></td>
+                        <td>{{c.subject}}</td>
+                        <td style="text-align: center">{{c.created}}</td>
+                        <td style="text-align: center">{{c.modified}}</td>
+                        <td style="width: 100%" class="btn btn-primary"><span class="glyphicon glyphicon-pencil" info="{{c.name}}"></span></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div id="test"></div>
+</div>
+
+<div class="modal fade" id="add" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <form method="POST" novalidate>
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h3>Add Campaign</h3>
+                </div>
+                <div class="modal-body">
+                    {% csrf_token %}
+                    {% include 'includes/form.html' %}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <input class="btn btn-primary" type="submit" value="Submit"></button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="modal fade" id="edit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <form action="" method="POST" novalidate id="edit_form">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h3>Edit Campaign: <span id="campaign"></span></h3>
+                </div>
+                <div class="modal-body">
+                    <span>{% csrf_token %}</span>
+                    <span id="edit_campaign"></span>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <input class="btn btn-primary" type="submit" value="Submit"></button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    $('.glyphicon-pencil').click(function(){
+        var name = $(this).attr('info');
+        var url = '/campaign/'+name+'/edit'
+        $.ajax ({
+            type: 'GET',
+            url: url,
+            datatype: 'HTML',
+            success: editSuccess,
+        });
+        $('#edit').modal();
+        $('#edit_form').attr('action', url)
+        $('#campaign').text(name)
+    });
+
+    function editSuccess(data, textStatus, jqXHR) {
+        $('#edit_campaign').html(data)
+    };
+</script>
+
+{% endblock %}

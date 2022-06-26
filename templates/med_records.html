@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %}Medical Records{% endblock %}
+
+{% block content %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mouse0270-bootstrap-notify/3.1.7/bootstrap-notify.min.js"></script>
+
+<div class="row">
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th style="text-align: center">Date</th>
+                        <th style="text-align: center">Admit Number</th>
+                        <th style="text-align: center">Name</th>
+                        <th style="text-align: center">Batch</th>
+                        <th style="text-align: center">Notes</th>
+                        <th style="text-align: center">Edit</th>
+                        <th style="text-align: center">Delete</th>
+                    </tr>
+                </thead>
+                <tbody style="text-align: center; font-size: 12px">
+                    {% for m in med_records %}
+                        <tr class="med_records">
+                            <td>{{m.date}}</td>
+                            <td>{{m.student.admitnumber}}</td>
+                            <td>{{m.student.name}}</td>
+                            <td>{{m.student.batch}}</td>
+                            <td>{{m.description}}</td>
+                            <td><a href="/medical/{{m.id}}/edit" class="edit_medical">Edit</a></td>
+                            <td><a href="/medical/{{m.id}}/delete" class="delete_medical">Delete</a></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div id="test"></div>
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,268 @@
+{% load static %}
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <title>Dar al Zahra School</title>
+
+    <meta http-equiv="content-type" name="viewport" content="text/html; charset=UTF8; width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" type="text/css" href="{% static 'css/profile/profile.css' %}" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link href='http://fonts.googleapis.com/css?family=Oxygen:300' rel='stylesheet' type='text/css'>
+    
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="{% static 'js/profile/html2canvas.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/profile/app.js' %}"></script>
+
+    <script async="" src="https://cdn.rawgit.com/eligrey/Blob.js/master/Blob.js"></script>
+    <script async="" src="https://cdn.rawgit.com/eligrey/canvas-toBlob.js/master/canvas-toBlob.js"></script>
+    <script type="text/javascript" src="{% static 'js/profile/FileSaver.min.js' %}"></script>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div style="display: none" class="admitnumber col-md-1">{{student.admitnumber}}</div><button class="btn btn-primary col-md-1" onclick="takeScreenShot()">SAVE IMAGE</button>
+        </div>
+    </div>
+    <div class="container-fluid" id="target" style="background: white">
+        <div class="row">
+            <div class="col-md-2 col-md-offset-5 col-sm-4 col-sm-offset-4 col-xs-8 col-xs-offset-2">
+                <!-- <img style="width: 100%" class="logo" src="images/logo.png"> -->
+                <img src="{% static 'img/logo.png' %}" alt="Logo" width="100%">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 col-md-offset-4">
+                <!-- <img style="width: 100%" class="logo" src="images/nameengarbgreen.png"> -->
+                <img src="{% static 'img/nameengarbgreen.png' %}" alt="Name" width="100%">
+            </div>
+        </div>
+        <div class="row" style="padding-top: 55px">
+            <div class='col-md-2 col-md-offset-3 col-sm-3 col-sm-offset-3 col-xs-6'>
+                <img style="width: 100%" class="displaypic" src="/static/img/profiles/{{pic}}">
+            </div>
+            <div class="col-md-4 col-sm-3 col-xs-6 name" style="padding-top: 55px; text-align: center">
+                    {{student.name}}
+            </div>
+        </div>
+        <div class="row" style="margin-top: 55px;">
+            <div class="col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2 col-xs-12 beige">
+                <div class="col-md-4 col-sm-4 col-xs-5" style="text-align: right">
+                    Admission Date:
+                </div>
+                <div class="col-md-8 col-sm-8 col-xs-7">
+                    {{student.admitdate}}
+                </div>
+            </div>
+        </div>
+        <div class="row" style="margin-top: 5px;">
+            <div class="col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2 col-xs-12 green">
+                <div class="col-md-4 col-sm-4 col-xs-5" style="text-align: right">
+                    Class
+                </div>
+                <div class="col-md-8 col-sm-8 col-xs-7">
+                    {{student.batch}}
+                </div>
+            </div>
+        </div>
+        <div class="row" style="margin-top: 5px;">
+            <div class="col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2 col-xs-12 beige">
+                <div class="col-md-4 col-sm-4 col-xs-5" style="text-align: right">
+                    Date of Birth:
+                </div>
+                <div class="col-md-8 col-sm-8 col-xs-7">
+                    {{student.birthdate}}
+                </div>
+            </div>
+        </div>
+        <div class="row" style="margin-top: 5px;">
+            <div class="col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2 col-xs-12 green">
+                <div class="col-md-4 col-sm-4 col-xs-5" style="text-align: right">
+                    Gender
+                </div>
+                <div class="col-md-4 col-sm-8 col-xs-7">
+                    {{student.gender}}
+                </div>
+            </div>
+        </div>
+        <div class="row" style="margin-top: 5px;">
+            <div class="col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2 col-xs-12 beige">
+                <div class="col-md-4 col-sm-4 col-xs-5" style="text-align: right">
+                    Nationality
+                </div>
+                <div class="col-md-8 col-sm-8 col-xs-7">
+                    {{student.nationality}}
+                </div>
+            </div>
+        </div>
+        <div class="row" style="margin-top: 5px;">
+            <div class="col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2 col-xs-12 green">
+                <div class="col-md-4 col-sm-4 col-xs-5" style="text-align: right">
+                    Mother Tongue
+                </div>
+                <div class="col-md-4 col-sm-8 col-xs-7 forarabic">
+                    {{student.mother_tongue}}
+                </div>
+            </div>
+        </div>
+        <div class="row" style="margin-top: 5px;">
+            <div class="col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2 col-xs-12 beige">
+                <div class="col-md-4 col-sm-4 col-xs-5" style="text-align: right">
+                    Category
+                </div>
+                <div class="col-md-8 col-sm-8 col-xs-7">
+                    {{student.category}}
+                </div>
+            </div>
+        </div>
+        <div class="row" style="margin-top: 5px;">
+            <div class="col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2 col-xs-12 green">
+                <div class="col-md-4 col-sm-4 col-xs-5" style="text-align: right">
+                    Religion
+                </div>
+                <div class="col-md-4 col-sm-8 col-xs-7 forarabic">
+                    {{student.religion}}
+                </div>
+            </div>
+        </div>
+        <div class="row" style="margin-top: 5px;">
+            <div class="col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2 col-xs-12 beige">
+                <div class="col-md-4 col-sm-4 col-xs-5" style="text-align: right">
+                    Address
+                </div>
+                <div class="col-md-8 col-sm-8 col-xs-7 forarabic">
+                    {{student.address}}
+                </div>
+            </div>
+        </div>
+        <div class="row" style="margin-top: 5px;">
+            <div class="col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2 col-xs-12 green">
+                <div class="col-md-4 col-sm-4 col-xs-5" style="text-align: right">
+                    City
+                </div>
+                <div class="col-md-4 col-sm-8 col-xs-7">
+                    {{student.city}}
+                </div>
+            </div>
+        </div>
+        <div class="row" style="margin-top: 5px;">
+            <div class="col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2 col-xs-12 beige">
+                <div class="col-md-4 col-sm-4 col-xs-5" style="text-align: right">
+                    Country
+                </div>
+                <div class="col-md-8 col-sm-8 col-xs-7">
+                    {{student.country}}
+                </div>
+            </div>
+        </div>
+        <div class="row" style="margin-top: 5px;">
+            <div class="col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2 col-xs-12 green">
+                <div class="col-md-4 col-sm-4 col-xs-5" style="text-align: right">
+                    Birth Place
+                </div>
+                <div class="col-md-4 col-sm-8 col-xs-7 forarabic">
+                    {{student.birth_place}}
+                </div>
+            </div>
+        </div>
+        <div class="row" style="margin-top: 5px;">
+            <div class="col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2 col-xs-12 green">
+                <div class="col-md-4 col-sm-4 col-xs-5" style="text-align: right">
+                    Descent
+                </div>
+                <div class="col-md-4 col-sm-8 col-xs-7">
+                    {{student.descent}}
+                </div>
+            </div>
+        </div>
+        <div class="row" style="margin-top: 5px;">
+            <div class="col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2 col-xs-12 beige">
+                <div class="col-md-4 col-sm-4 col-xs-5" style="text-align: right">
+                    Mother's Name
+                </div>
+                <div class="col-md-8 col-sm-8 col-xs-7 forarabic">
+                    {{student.mother_name}}
+                </div>
+            </div>
+        </div>
+        <div class="row" style="margin-top: 5px;">
+            <div class="col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2 col-xs-12 green">
+                <div class="col-md-4 col-sm-4 col-xs-5" style="text-align: right">
+                    Mother's Occupation
+                </div>
+                <div class="col-md-4 col-sm-8 col-xs-7">
+                    {{student.mother_occupation}}
+                </div>
+            </div>
+        </div>
+        <div class="row" style="margin-top: 5px;">
+            <div class="col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2 col-xs-12 beige">
+                <div class="col-md-4 col-sm-4 col-xs-5" style="text-align: right">
+                    Fathers Name
+                </div>
+                <div class="col-md-8 col-sm-8 col-xs-7 forarabic">
+                    {{student.father_name}}
+                </div>
+            </div>
+        </div>
+        <div class="row" style="margin-top: 5px;">
+            <div class="col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2 col-xs-12 green">
+                <div class="col-md-4 col-sm-4 col-xs-5" style="text-align: right">
+                    Father's Occupation
+                </div>
+                <div class="col-md-4 col-sm-8 col-xs-7">
+                    {{student.father_occupation}}
+                </div>
+            </div>
+        </div>
+        <div class="row" style="margin-top: 5px;">
+            <div class="col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2 col-xs-12 beige">
+                <div class="col-md-4 col-sm-4 col-xs-5" style="text-align: right">
+                    Medical Condition
+                </div>
+                <div class="col-md-8 col-sm-8 col-xs-7 forarabic">
+                    {{student.medical_condition}}
+                </div>
+            </div>
+        </div>
+        <div class="row" style="margin-top: 5px;">
+            <div class="col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2 col-xs-12 green">
+                <div class="col-md-4 col-sm-4 col-xs-5" style="text-align: right">
+                    Sponsor Name
+                </div>
+                <div class="col-md-4 col-sm-8 col-xs-7">
+                    {{student.sponsor.name}}
+                </div>
+            </div>
+        </div>
+        <div class="row" style="margin-top: 5px;">
+            <div class="col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2 col-xs-12 beige">
+                <div class="col-md-4 col-sm-4 col-xs-5" style="text-align: right">
+                    Sponsor Email
+                </div>
+                <div class="col-md-8 col-sm-8 col-xs-7">
+                    {{student.sponsor.email}}
+                </div>
+            </div>
+        </div>
+        <div class="row" style="margin-top: 5px; margin-bottom: 50px">
+            <div class="col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2 col-xs-12 green">
+                <div class="col-md-4 col-sm-4 col-xs-5" style="text-align: right">
+                    Sponsor Phone
+                </div>
+                <div class="col-md-4 col-sm-8 col-xs-7">
+                    {{student.sponsor.phone}}
+                </div>
+            </div>
+        </div>
+        <div class="row footer">
+            Dar-al-Zahra Charitable School<br>
+            Al-Quds Quarter - Najaf - Iraq<br>
+            +9647815407367<br>
+            info@dar-al-zahra.org
+        </div>
+    </div>
+</body>
+</html>

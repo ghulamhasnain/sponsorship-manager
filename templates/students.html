@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %}Students{% endblock %}
+
+{% block content %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mouse0270-bootstrap-notify/3.1.7/bootstrap-notify.min.js"></script>
+
+<div class="row">
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th style="text-align: center">No.</th>
+                        <th style="text-align: center">Admit Number</th>
+                        <th style="text-align: center">Admit Date</th>
+                        <th style="text-align: center">Name</th>
+                        <th style="text-align: center">Batch</th>
+                        <th style="text-align: center">Descent</th>
+                        <th style="text-align: center">Sponsor</th>
+                    </tr>
+                </thead>
+                <tbody style="text-align: center; font-size: 12px">
+                    {% for o in students %}
+                        <tr class="students">
+                            <td>{{forloop.counter}}
+                            <td><a href="/student/{{o.admitnumber}}/view" class="edit_profile" info="{{o.admitnumber}}">{{o.admitnumber}}</a> (<a href="/admin/students/student/{{o.id}}/change/">edit</a>)</td>
+                            <td>{{o.admitdate}}</td>
+                            <td>{{o.name}}</td>
+                            <td>{{o.batch}}</td>
+                            <td>{{o.descent}}</td>
+                            <td>{{o.sponsor.name}} <span style="font-size: 10px">({{o.sponsor.email}})</span></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div id="test"></div>
+</div>
+
+
+{% endblock %}

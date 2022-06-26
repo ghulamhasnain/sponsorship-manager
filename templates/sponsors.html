@@ -1,0 +1,274 @@
+{% extends 'base.html' %}
+
+{% block title %}Sponsors{% endblock %}
+
+{% block content %}
+
+{% load static %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mouse0270-bootstrap-notify/3.1.7/bootstrap-notify.min.js"></script>
+
+{% if error %}
+    <div class="row" style="margin: 10px">
+        <div class="alert alert-danger" style="margin-top: 20px">{{error}}</div>
+    </div>
+{% endif %}
+
+<div class="row" style="margin: 10px">
+    <div class="col-xs-1 col-xs-offset-10 btn btn-default" data-toggle="modal" data-target="#delete">Delete all</div>
+    <div class="col-xs-1 btn btn-primary glyphicon glyphicon-plus" data-toggle="modal" data-target="#add"></div>
+</div>
+
+<div class="row">
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th style="text-align: center">No.</th>
+                        <th style="text-align: center">Name</th>
+                        <th style="text-align: center">Email</th>
+                        <th style="text-align: center">Email to</th>
+                        <th style="text-align: center">Sponsored</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for s in sponsors %}
+                        <tr class="sponsors">
+                            <td>{{forloop.counter}}
+                            <td>{{s.first_name}}</td>
+                            <td><a class="sponsor" href="#" info="{{s.username}}">{{s.username}}</a></td>
+                            <td>{{s.user_info.email_to}}</td>
+                            <td style="text-align: center">{{s.sponsored}}</td>
+                            <td style="width: 100%" class="btn btn-primary"><span class="glyphicon glyphicon-envelope" info="{{s.username}}"></span></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div id="test">
+            <!-- <div class="loader"></div> -->
+            
+        </div>
+</div>
+
+<div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <form action="/sponsor/delete_all" method="POST" novalidate>
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h3>Are you sure you want to delete all Sponsors?</h3>
+                    {% csrf_token %}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">No</button>
+                    <input class="btn btn-danger" type="submit" value="Yes"></button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="modal fade" id="add" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <form method="POST" novalidate>
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h3>Add Sponsor</h3>
+                </div>
+                <div class="modal-body">
+                    {% csrf_token %}
+                    {% include 'includes/form.html' %}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <input class="btn btn-primary" type="submit" value="Submit"></button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="modal fade" id="edit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <form action="" method="POST" novalidate id="edit_form">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h3>Edit Sponsor: <span id="sponsor"></span></h3>
+                </div>
+                <div class="modal-body">
+                    <span>{% csrf_token %}</span>
+                    <span id="edit_sponsor"></span>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <input class="btn btn-primary" type="submit" value="Submit"></button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="modal fade" id="emailModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                {% csrf_token %}
+                {% include 'includes/campaign_form.html' %}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <input id="submit" type="submit" class="btn btn-primary" value="Send Email" data-dismiss="modal">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('.sponsor').click(function(){
+        var username = $(this).attr('info');
+        var url = '/sponsor/'+username+'/edit'
+        $.ajax ({
+            type: 'GET',
+            url: url,
+            datatype: 'HTML',
+            success: editSuccess,
+        });
+        $('#edit').modal();
+        $('#edit_form').attr('action', url)
+        $('#sponsor').text(username)
+    });
+
+    function editSuccess(data, textStatus, jqXHR) {
+        $('#edit_sponsor').html(data)
+    };
+
+    $('.glyphicon-envelope').click(function(){
+        var username = $(this).attr('info');
+        $('#emailModal').modal()
+        $('#id_sponsor').val(username)
+        $('#id_campaign').trigger("change")
+    });
+
+    $('#id_campaign').change(function(){
+        $.ajax ({
+            type: 'POST',
+            url: '/sponsor/email/content',
+            data: {
+                sponsor: $('#id_sponsor').val(),
+                campaign: $(this).val(),
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
+            dataType: 'html',
+            success: campaignSuccess,
+        });
+    });
+
+    function campaignSuccess(data, textStatus, jqXHR) {
+        $('#id_subject').val(data.split(';')[0]);
+        $('#id_body').val(data.split(';')[1]);
+        $('#id_email_to').val(data.split(';')[2]);
+        
+        if (data.split(';')[4] == 'true') {
+            $('#id_attachment').prop('checked', false) // Used to be true but changed as per Zainab demand
+            $('#id_attachment').val(0)
+        }
+        else {
+            $('#id_attachment').prop('checked', false)
+            $('#id_attachment').val(0)
+        }
+        $('#id_newsletter').prop('checked', false)
+        $('#id_newsletter').val(0)
+
+        $('#id_picture').prop('checked', false)
+        $('#id_picture').val(0)
+    }
+
+    $('.email_sent').each(function(){
+        if ($(this).text() == "False") {
+            $(this).html('<span class="glyphicon glyphicon-minus" style="color: red"></span>')
+        }
+        else {
+            $(this).html('<span class="glyphicon glyphicon-ok" style="color: green"></span>')
+        }
+    })
+
+    $('#submit').click(function(){
+        $.notify({
+            message: '<div class="loader"></div>'
+        }, {
+            type: 'success',
+            delay: 600000,
+        });
+
+        $.ajax ({
+            type: 'POST',
+            url: '/sponsor/email',
+            data: {
+                campaign: $('#id_campaign').val(),
+                subject: $('#id_subject').val(),
+                body: $('#id_body').val(),
+                email_to: $('#id_email_to').val(),
+                sponsor: $('#id_sponsor').val(),
+                attachment: $('#id_attachment').val(),
+                newsletter: $('#id_newsletter').val(),
+                picture:$('#id_picture').val(),
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
+            dataType: 'html',
+            success: emailSuccess,
+        });
+    })
+
+    function emailSuccess(data, textStatus, jqXHR) {
+        $.notifyClose();
+        
+        if (data == 'ok') {
+            $.notify({
+                message: 'Email sent'
+            }, {
+                type: 'success'
+            });
+        }
+        else {
+            $.notify({
+                message: data
+            }, {
+                type: 'danger'
+            });
+        }
+    };
+
+    $('#id_attachment').click(function() {
+        if ($(this).val() == 1) {
+            $(this).val(0)
+        }
+        else {
+            $(this).val(1)
+        }
+    });
+
+    $('#id_newsletter').click(function() {
+        if ($(this).val() == 1) {
+            $(this).val(0)
+        }
+        else {
+            $(this).val(1)
+        }
+    });
+
+    $('#id_picture').click(function() {
+        if ($(this).val() == 1) {
+            $(this).val(0)
+        }
+        else {
+            $(this).val(1)
+        }
+    });
+
+</script>
+
+{% endblock %}

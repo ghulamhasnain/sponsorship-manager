@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+
+{% block title %}Information{% endblock %}
+
+{% block content %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mouse0270-bootstrap-notify/3.1.7/bootstrap-notify.min.js"></script>
+
+{% if error %}
+    <div class="row" style="margin: 10px">
+        <div class="alert alert-danger" style="margin-top: 20px">{{error}}</div>
+    </div>
+{% endif %}
+
+<div class="row" style="margin: 10px">
+    <div class="col-xs-1 col-xs-offset-11 btn btn-primary" data-toggle="modal" data-target="#delete">Delete all</div>
+</div>
+
+<div class="row">
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th style="text-align: center">No.</th>
+                        <th style="text-align: center">Sponsor</th>
+                        <th style="text-align: center">Orphan</th>
+                        <th style="text-align: center">Notes</th>
+                        <th style="text-align: center">Attendance</th>
+                        <th style="text-align: center">School days</th>
+                        <th style="text-align: center">Result</th>
+                        <th style="text-align: center">Result of</th>
+                        <th style="text-align: center">Doctor Visits</th>
+                        <th style="text-align: center">Detail</th>
+                        <th style="text-align: center">Sponsorship</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody style="text-align: center">
+                    {% for i in information %}
+                        <tr class="information">
+                            <td>{{forloop.counter}}
+                            <td>{{i.orphan.sponsor.first_name}}</td>
+                            <td>{{i.orphan}}</td>
+                            <td>{{i.notes}}</td>
+                            <td>{{i.attendance}}</td>
+                            <td>{{i.school_days}}</td>
+                            <td>{{i.result}}</td>
+                            <td>{{i.result_of}}</td>
+                            <td>{{i.doc_visits}}</td>
+                            <td>{{i.doc_visits_detail}}</td>
+                            <td>{{i.sponsorship}}</td>
+                            <td style="width: 100%" class="btn btn-primary"><span class="glyphicon glyphicon-pencil" info="{{i.orphan}}"></span></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div id="test"></div>
+</div>
+
+<div class="modal fade" id="edit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <form action="" method="POST" novalidate id="edit_form">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h3>Edit Orphan: <span id="orphan"></span></h3>
+                </div>
+                <div class="modal-body">
+                    <span>{% csrf_token %}</span>
+                    <span id="edit_info"></span>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <input class="btn btn-primary" type="submit" value="Submit"></button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <form action="/info/delete_all" method="POST" novalidate>
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h3>Are you sure you want to delete all info?</h3>
+                    {% csrf_token %}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">No</button>
+                    <input class="btn btn-danger" type="submit" value="Yes"></button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    $('.glyphicon-pencil').click(function(){
+        var orphan = $(this).attr('info');
+        var url = '/info/'+orphan+'/edit'
+        $.ajax ({
+            type: 'GET',
+            url: url,
+            datatype: 'HTML',
+            success: editSuccess,
+        });
+        $('#edit').modal();
+        $('#edit_form').attr('action', url)
+        $('#orphan').text(admitnumber)
+    });
+
+    function editSuccess(data, textStatus, jqXHR) {
+        $('#edit_info').html(data)
+    };
+</script>
+
+{% endblock %}

@@ -1,0 +1,56 @@
+@import url('https://fonts.googleapis.com/css?family=Oxygen');
+
+* {
+	font-family: 'Oxygen', sans-serif;
+	font-size: 18px;
+	/border: 1px solid purple;/
+}
+
+img.displaypic {
+	border-radius: 100px;
+}
+
+.logo {
+	font-size: 28px;
+	text-align: center;
+	font-weight: bold;
+}
+
+.name {
+	font-size: 21px;
+	font-weight: bold;
+}
+
+.green {
+	background-color: #9bf2bf;
+	color: black;
+	font-weight: bold;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+.beige {
+	background-color: #f0f0f0;
+	color: black;
+	font-weight: bold;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+.footer {
+	background-color: #757575;
+	color: white;
+	text-align: center;
+	padding-top: 50px;
+	padding-bottom: 50px;
+	font-size: 14px;
+}
+
+.forarabic {
+	overflow: hidden;
+    text-wrap: none;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    text-align: left;
+    padding-right: 10px;
+}

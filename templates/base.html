@@ -1,0 +1,41 @@
+{% load static %}
+
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="http://www.dar-al-zahra.org/js/app.js"></script>
+        
+        <link rel="stylesheet" href="{% static 'css/style.css' %}">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <title>{% block title %}{% endblock %}</title>
+    </head>
+    <body>
+        <div class="container-fluid">
+            <div class="row" style="background: #15723F">
+                <div class="col-xs-offset-3 col-xs-6 col-sm-2 col-sm-offset-0 col-md-1 col-md-offset-0">
+                    <a href="/">
+                        <img src="http://www.dar-al-zahra.org//images/logowhite.png" alt="logo" style="max-width: 100%; margin-bottom: 5px; margin-top: 5px">
+                    </a>
+                </div>
+                <div class="dropdown pull-right">
+                    <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" style="margin: 25px; padding-top: 5px; padding-bottom: 3px">
+                        <span class="glyphicon glyphicon-menu-hamburger"></span>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                        <li><a href="/upload">Upload</a></li>
+                        <li><a href="/student/all">Students</a></li>
+                        <li><a href="/campaign">Campaign</a></li>
+                        <li><a href="/logout">Logout</a></li>
+                    </ul>
+                </div>
+            </div>
+            {% block content %}{% endblock %}
+        </div>
+    </body>
+</html>

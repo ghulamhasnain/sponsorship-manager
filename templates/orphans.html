@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+
+{% block title %}Orphans{% endblock %}
+
+{% block content %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mouse0270-bootstrap-notify/3.1.7/bootstrap-notify.min.js"></script>
+
+{% if error %}
+    <div class="row" style="margin: 10px">
+        <div class="alert alert-danger" style="margin-top: 20px">{{error}}</div>
+    </div>
+{% endif %}
+
+<div class="row" style="margin: 10px">
+    <div class="col-xs-1 col-xs-offset-10 btn btn-default" data-toggle="modal" data-target="#delete">Delete all</div>
+    <div class="col-xs-1 btn btn-primary glyphicon glyphicon-plus" data-toggle="modal" data-target="#add"></div>
+</div>
+
+<div class="row">
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th style="text-align: center">No.</th>
+                        <th style="text-align: center">Admit Number</th>
+                        <th style="text-align: center">Admit Date</th>
+                        <th style="text-align: center">Name</th>
+                        <th style="text-align: center">Batch</th>
+                        <th style="text-align: center">Descent</th>
+                        <th style="text-align: center">Sponsor</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody style="text-align: center; font-size: 12px">
+                    {% for o in orphans %}
+                        <tr class="orphans">
+                            <td>{{forloop.counter}}
+                            <td><a href="#" class="edit_profile" info="{{o.admitnumber}}">{{o.admitnumber}}</a></td>
+                            <td>{{o.admitdate}}</td>
+                            <td>{{o.name}}</td>
+                            <td>{{o.batch}}</td>
+                            <td>{{o.descent}}</td>
+                            <td>{{o.sponsor.first_name}} <span style="font-size: 10px">({{o.sponsor.username}})</span></td>
+                            <td><a class="btn btn-primary glyphicon glyphicon-download" href="/orphan/{{o.admitnumber}}/download"></a></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div id="test"></div>
+</div>
+
+
+<div class="modal fade" id="add" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <form method="POST" novalidate>
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h3>Add Orphan</h3>
+                </div>
+                <div class="modal-body">
+                    {% csrf_token %}
+                    {% include 'includes/form.html' %}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <input class="btn btn-primary" type="submit" value="Submit"></button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="modal fade" id="edit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <form action="" method="POST" novalidate id="edit_form">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h3>Edit Orphan: <span id="orphan"></span></h3>
+                </div>
+                <div class="modal-body">
+                    <span>{% csrf_token %}</span>
+                    <span id="edit_orphan"></span>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <input class="btn btn-primary" type="submit" value="Submit"></button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <form action="/orphan/delete_all" method="POST" novalidate>
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h3>Are you sure you want to delete all info?</h3>
+                    {% csrf_token %}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">No</button>
+                    <input class="btn btn-danger" type="submit" value="Yes"></button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    $('.edit_profile').click(function(){
+        var admitnumber = $(this).attr('info');
+        var url = '/orphan/'+admitnumber+'/edit'
+        $.ajax ({
+            type: 'GET',
+            url: url,
+            datatype: 'HTML',
+            success: editSuccess,
+        });
+        $('#edit').modal();
+        $('#edit_form').attr('action', url)
+        $('#orphan').text(admitnumber)
+    });
+
+    function editSuccess(data, textStatus, jqXHR) {
+        $('#edit_orphan').html(data)
+    };
+</script>
+
+{% endblock %}

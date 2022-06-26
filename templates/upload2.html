@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block title %}Upload{% endblock %}
+
+{% block content %}
+
+<form action="{{upload_url}}" method="POST" enctype="multipart/form-data">{% csrf_token %}
+    <div class="row" style="margin-bottom: 10px; margin-top: 10px; text-align: center">
+        <div class="col-xs-8 col-xs-offset-2 col-sm-4 col-sm-offset-4 col-md-2 col-md-offset-5">
+            <h3>Upload New Info</h3>
+        </div>
+    </div>
+    <div class="row" style="margin-bottom: 10px">
+        <div class="col-xs-8 col-xs-offset-2 col-sm-4 col-sm-offset-4 col-md-2 col-md-offset-5">
+            <input class="form-control" name="file" style="width: 100%" type="file">
+        </div>
+    </div>
+
+    <div class="row" style="margin-bottom: 10px">
+        <div class="col-xs-8 col-xs-offset-2 col-sm-4 col-sm-offset-4 col-md-2 col-md-offset-5">
+            <div class="radio">
+                <label><input type="radio" name="info_type" value="sponsors" checked="checked">Sponsors</label>
+            </div>
+            <div class="radio">
+                <label><input type="radio" name="info_type" value="students">Students</label>
+            </div>
+            <div class="radio">
+                <label><input type="radio" name="info_type" value="agents">Agents</label>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" style="margin-bottom: 10px">
+        <div class="col-xs-8 col-xs-offset-2 col-sm-4 col-sm-offset-4 col-md-2 col-md-offset-5">
+            <input style="width: 100%" type="submit" class="btn btn-success btn-md form-control" value="SUBMIT">
+        </div>
+    </div>
+</form>
+
+<form action="/student/update" method="POST" enctype="multipart/form-data">{% csrf_token %}
+    <div class="row" style="margin-bottom: 10px; margin-top: 10px; text-align: center">
+        <div class="col-xs-8 col-xs-offset-2 col-sm-4 col-sm-offset-4 col-md-2 col-md-offset-5">
+            <h3>Update</h3>
+        </div>
+    </div>
+    <div class="row" style="margin-bottom: 10px">
+        <div class="col-xs-8 col-xs-offset-2 col-sm-4 col-sm-offset-4 col-md-2 col-md-offset-5">
+            <input class="form-control" name="file" style="width: 100%" type="file">
+        </div>
+    </div>
+
+    <div class="row" style="margin-bottom: 10px">
+        <div class="col-xs-8 col-xs-offset-2 col-sm-4 col-sm-offset-4 col-md-2 col-md-offset-5">
+            <div class="radio">
+                <label><input type="radio" name="info_type" value="students" checked="checked">Students</label>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" style="margin-bottom: 10px">
+        <div class="col-xs-8 col-xs-offset-2 col-sm-4 col-sm-offset-4 col-md-2 col-md-offset-5">
+            <input style="width: 100%" type="submit" class="btn btn-success btn-md form-control" value="SUBMIT">
+        </div>
+    </div>
+</form>
+
+{% endblock %}

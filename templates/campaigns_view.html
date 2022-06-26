@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+
+{% block title %}Campaigns{% endblock %}
+
+{% block content %}
+
+<div class="alert alert-success" style="margin-top: 20px; display: none"></div>
+
+<div class="row" style="margin: 10px">
+    <div class="col-xs-1 col-xs-offset-11 btn btn-primary glyphicon glyphicon-plus" data-toggle="modal" data-target="#add"></div>
+</div>
+
+<div class="row">
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Campaign</th>
+                        <th>Title</th>
+                        <th>Created</th>
+                        <th>Modified</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for c in campaigns %}
+                        <tr>
+                            <td>{{c.name}}</td>
+                            <td>{{c.title}}</td>
+                            <td>{{c.created}}</td>
+                            <td>{{c.modified}}</td>
+                            <td style="width: 100%" class="btn btn-primary"><span class="glyphicon glyphicon-pencil" info="{{c.key.urlsafe()}}"></span></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div id="test"></div>
+</div>
+
+<div class="modal fade" id="add" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <form method="POST">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel"><input style="width: 100%" name="name" placeholder="Campaign name"></h4>
+                </div>
+                <div class="modal-header">
+                    <input name="title" type="text" placeholder="Title" style="width: 100%">
+                </div>
+                <div class="modal-body">
+                    <textarea name="body" rows="20" placeholder="Email Body..." style="width: 100%"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <input type="submit" class="btn btn-primary" value="Save">
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="modal fade" id="edit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <form action="" method="POST">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel"><input id="edit_name" style="width: 100%" name="name" placeholder="Campaign name"></h4>
+                </div>
+                <div class="modal-header">
+                    <input id="edit_title" name="title" type="text" placeholder="Title" style="width: 100%">
+                </div>
+                <div class="modal-body">
+                    <textarea id="edit_body" name="body" rows="15" placeholder="Email Body..." style="width: 100%"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <input type="submit" class="btn btn-primary" value="Save">
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    $('.glyphicon-pencil').click(function(){
+        var urlsafe_id = $(this).attr('info');
+        $.ajax ({
+            type: 'POST',
+            url: '/campaign/view',
+            data: {
+                urlsafe_id: urlsafe_id,
+            },
+            dataType: 'html',
+            success: editSuccess,
+        });
+        $('#edit').modal();
+    });
+
+    function editSuccess(data, textStatus, jqXHR) {
+        var name = data.split(';')[0]
+        var title = data.split(';')[1]
+        var body = data.split(';')[2]
+        $('#edit_name').val(name)
+        $('#edit_title').val(title)
+        $('#edit_body').val(body)
+        $('form').attr('action', data.split(';')[3])
+    };
+
+    $('.email_sent').each(function(){
+        if ($(this).text() == "False") {
+            $(this).html('<span class="glyphicon glyphicon-minus" style="color: red"></span>')
+        }
+        else {
+            $(this).html('<span class="glyphicon glyphicon-ok" style="color: green"></span>')
+        }
+    })
+</script>
+
+{% endblock %}
